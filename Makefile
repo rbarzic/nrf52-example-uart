@@ -58,6 +58,10 @@ CFLAGS += -DBOARD_PCA10036
 CFLAGS += -DNRF52
 CFLAGS += -DBSP_DEFINES_ONLY
 
+# We want to re-route printf strings to the UART, not the debugger
+CFLAGS += -DPRINTF_USES_UART
+
+
 # list SDK modules used (see misc/SDK_Makefile.mk)
 
 # Startup code

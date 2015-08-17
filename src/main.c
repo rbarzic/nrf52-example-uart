@@ -35,6 +35,21 @@
 #define UART_TX_BUF_SIZE 256                         /**< UART TX buffer size. */
 #define UART_RX_BUF_SIZE 1                           /**< UART RX buffer size. */
 
+
+#ifdef PRINTF_USES_UART
+int _write(int file, char *ptr, int len)
+{
+
+    int i=0;
+    uint8_t cr;
+    for(i=0 ; i<len ; i++) {
+        cr = *ptr++;
+        while(app_uart_put(cr) != NRF_SUCCESS);
+    }
+    return len;
+}
+#endif
+ 
 void uart_error_handle(app_uart_evt_t * p_event)
 {
     if (p_event->evt_type == APP_UART_COMMUNICATION_ERROR)
@@ -122,19 +137,19 @@ int main(void)
     APP_ERROR_CHECK(err_code);
 
 #ifndef ENABLE_LOOPBACK_TEST
-    printf("\n\rStart: \n\r");
+    printf("Hello world ! (%s)",__DATE__);
 
     while (true)
     {
         uint8_t cr;
         while(app_uart_get(&cr) != NRF_SUCCESS);
         while(app_uart_put(cr) != NRF_SUCCESS);
-
+        
         if (cr == 'q' || cr == 'Q')
         {
             LEDS_ON(LEDS_MASK);
             printf(" \n\rExit!\n\r");
-
+            
             while (true)
             {
                 // Do nothing.
