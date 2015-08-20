@@ -36,6 +36,9 @@
 #define UART_RX_BUF_SIZE 1                           /**< UART RX buffer size. */
 
 
+#define PIN_LED 19 // LED1   
+
+
 #ifdef PRINTF_USES_UART
 int _write(int file, char *ptr, int len)
 {
@@ -66,8 +69,9 @@ void uart_error_handle(app_uart_evt_t * p_event)
 
 int main(void)
 {
-    LEDS_CONFIGURE(LEDS_MASK);
-    LEDS_OFF(LEDS_MASK);
+    nrf_gpio_cfg_output(PIN_LED);
+    nrf_gpio_pin_set(PIN_LED); // LED is off
+    
     uint32_t err_code;
     const app_uart_comm_params_t comm_params =
       {
@@ -91,8 +95,10 @@ int main(void)
 
     uint32_t i =0;
      while(1) {
+         nrf_gpio_pin_toggle(PIN_LED); 
          printf("%08d Hello world ! (%s)\n",i++,__DATE__);
          nrf_delay_ms(1000);
+         
     }
 }
 
